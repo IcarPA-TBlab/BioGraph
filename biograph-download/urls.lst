@@ -1,0 +1,17 @@
+ftp://ftp.ncbi.nlm.nih.gov//gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz
+http://archive.geneontology.org/latest-termdb/go_daily-termdb.obo-xml.gz
+ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz
+ftp://mirbase.org/pub/mirbase/CURRENT/miRNA.dat.gz
+http://cbio.mskcc.org/microrna_data/human_predictions_S_C_aug2010.txt.gz
+ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
+http://www.reactome.org/download/current/pathway2summation.txt
+http://www.reactome.org/download/current/gene_association.reactome
+http://www.reactome.org/download/current/miRBase2Reactome_All_Levels.txt
+ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt
+ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/locus_groups/protein-coding_gene.txt
+ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/locus_groups/non-coding_RNA.txt
+ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping//by_organism/HUMAN_9606_idmapping_selected.tab.gz
+http://bioinfo.life.hust.edu.cn/miRNASNP2/download/snp_in_human_miRNA_seed_region.txt
+http://bioinfo.life.hust.edu.cn/miRNASNP2/download/miRNA_targets_gain_by_SNPs_in_seed_regions.txt
+http://mirtarbase.mbc.nctu.edu.tw/cache/download/6.1/hsa_MTI.xlsx
+http://mircancer.ecu.edu/downloads/miRCancerDecember2016.txt
