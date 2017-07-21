@@ -1,4 +1,4 @@
-# BioGraph
-BioGraph: a web-service and a graph DB for querying and analyzing bioinformatics resources
+# biograph-download
+Shell script to download required data sources.
 
-http://biograph.pa.icar.cnr.it
+It may not work as is, because it depends on the location of the following standard tools:
