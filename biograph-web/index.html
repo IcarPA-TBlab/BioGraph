@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>BioGraphDB: An integrated graph database for bioinformatics</title>
+
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/jquery-ui-1.10.3.custom.css">
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/bootcomplete.css">
+	<link rel="stylesheet" href="/css/bootstrap-table.min.css">
+	<link rel="stylesheet" href="/css/bootstrap-table-group-by.css">
+	<style>
+		#queryBox {
+			margin: 0.5em 0 0.5em 1em;
+		}
+      	#jstree {
+			overflow: auto;
+			//height: auto;
+      		height: 660px;
+			padding: 0rem;
+			-webkit-overflow-scrolling: touch;
+			-ms-overflow-style: none;
+			font-size: 80%;
+      	}
+		#cy {
+      		height: 550px;
+      		border: 1px solid #337ab7;
+      		border-radius: 4px;
+      	}
+		#status {
+      		height: 30px;
+      		//border: 1px solid #337ab7;
+      		//background-color: white;
+      		color: #337ab7;
+      		font-size: 80%;
+      		border-radius: 4px;
+      		margin: 0.5em 0 0 0;
+      		padding: 0.3em;
+      	}
+      	#title {
+      		height: 65px;
+      		font-size: 30px;
+      		font-weight: bold;
+      	}
+      	.infobox {
+		    border: 1px solid #337ab7;
+		    border-spacing: 3px;
+		    background-color: #f8f9fa;
+		    color: black;
+		    margin: 0.5em 0 0.5em 1em;
+		    padding: 0.3em;
+		    float: right;
+		    clear: right;
+		    font-size: 88%;
+		    line-height: 1.5em;
+		}
+		.labels {
+			background-color: white;
+			border: 1px solid #337ab7;
+		}
+		.btn-tool {
+			width: 80px;
+			display: inline-block;
+		}
+		.btn-pvalue {
+			width: 120px;
+			display: inline-block;
+		}
+		.label-legenda {
+			width: 90px;
+			display: inline-block;
+		}
+		.cancer {
+			background-color: #d6e2f6;
+		}
+		.pathway {
+			background-color: #c0890c;
+		}
+		.protein {
+			background-color: #afc5e4;
+		}
+		.gene {
+			background-color: #bba7c6;
+		}
+		.interaction {
+			background-color: #bedfb1;
+		}
+		.mirnamature {
+			background-color: #f09693;
+		}
+		.mirna {
+			background-color: #f7cecc;
+		}
+		.mirnasnp {
+			background-color: #eaca9e;
+		}
+		.go {
+			background-color: #ffeebb;
+		}
+		pre {
+			background-color: white;
+			border: 0;
+			padding: 0;
+			margin: 0;
+		}
+ 	</style>
+</head>
+<body>
+
+<div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-primary media">
+				<div class="media-left">
+					<img src="/images/tblab.png" alt="Translational Bioinformatics Laboratory logo" height="50" class="media-object" style="margin: 5px;">
+				</div>
+				<div class="media-body text-center">
+					<h3>BioGraphDB - An integrated graph database for bioinformatics</h3>
+				</div>
+				<div class="media-right">
+					<img src="/images/icar.jpg" alt="ICAR logo" height="50" style="margin: 5px;">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<ul class="nav nav-tabs" role="tablist" id="myTabs">
+			  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+			  <li role="presentation"><a href="#dbschema" aria-controls="dbschema" role="tab" data-toggle="tab">DB Schema</a></li>
+			  <li role="presentation"><a href="#templates" aria-controls="templates" role="tab" data-toggle="tab">Templates</a></li>
+			  <li role="presentation"><a href="#scenarios" aria-controls="scenarios" role="tab" data-toggle="tab">Scenarios</a></li>
+			  <li role="presentation"><a href="#querydesk" aria-controls="querydesk" role="tab" data-toggle="tab">Gremlin Workbench</a></li>
+			  <li role="presentation"><a href="#datasources" aria-controls="datasources" role="tab" data-toggle="tab">Data Sources</a></li>
+			  <li role="presentation"><a href="#contacts" aria-controls="contacts" role="tab" data-toggle="tab">Contact Us</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="tab-content">
+
+	<div role="tabpanel" class="tab-pane active" id="home">
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-lg-3">
+			<div class="panel panel-primary">
+				<p class="bg-primary text-center" style="padding: 5px;">Motivations</p>
+				<p class="text-justify" style="margin: 10px;">
+					In the era of Big Data, a huge amount of biological data related to different entities, such as proteins, genes, non-coding RNA, diseases, functional associations, has been made available.<br>
+					These resources are typically stored in several bioinformatics databases, each one implementing its own data model and user interface.<br>
+					However, in many bioinformatics scenarios there is often the need to use more than one resource.<br>
+					For a bioinformatician that implies a further effort in terms of ability to skip form one service to another one; waste of working time for transferring data and intermediate results from one resource to another one, sometimes dealing with aliases and accession ID disambiguation.<br>
+					The availability of a single bioinformatics platform that integrates many biological resources and services is, for those reasons, a fundamental issue.
+				</p>			
+			</div>
+		</div>
+		<div class="col-lg-6 media">
+			<div class="media-body text-center">
+				<img src="/images/dbsources.png" alt="Source Databases" height="460" style="margin: 5px;">
+			</div>
+		</div>
+		<div class="col-lg-3">
+			<div class="panel panel-primary">
+				<p class="bg-primary text-center" style="padding: 5px;">Methods</p>
+				<p class="text-justify" style="margin: 10px;">
+					BioGraphDB is an integrated graph database that collects and links heterogeneous bioinformatics resources, and it is implemented on-top of OrientDB.<br>
+					Graph databases allow, in fact, a greater scalability and queries efficiency with regards to the size of data, rather than traditional SQL database.<br>
+					Each component database has been downloaded from its original site and it has been processed using customized Extract-Transformer-Loader (ETL) modules, in order to be assembled into a graph architecture. Each biological entity and its properties have been mapped respectively into a vertex and its attributes, and each relationship between two biological entities has been mapped into an edge. The whole assembled graph can be traversed using proper query languages, such as Gremlin. Each graph traversal represents a set of queries that are enough in order to solve several bioinformatics scenarios.
+				</p>			
+			</div>
+		</div>
+	</div>
+</div>
+	</div>
+
+	<div role="tabpanel" class="tab-pane" id="dbschema">
+	</div>
+	
+	<div role="tabpanel" class="tab-pane" id="templates">
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-primary text-center">
+				<p class="text-center">
+					<h3>Templates</h3>
+					Templates are predefined queries, each with a simple form and a description, grouped by category.<br>
+					After setting parameters, the ready-to-run query is sent to the <i>Gremlin Workbench</i> page for execution.
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-3">
+			<div id="templatestree" class='panel panel-primary'></div>
+		</div>
+		<div id="t_go2genes" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>GO Term </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Genes</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							Search for Genes that are associated with a particular Gene Ontology (GO) annotation.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('Go').has('name', <strong><var>goTerm</var></strong> ).<br>
+				    		&nbsp;out('ANNOTATES').hasLabel('Gene').order().by('description')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="goTerm-t_go2genes" class="col-sm-offset-2 col-sm-2 control-label">goTerm</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="goTerm-t_go2genes" placeholder="goTerm" value="3'-5' DNA helicase activity">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_go2genes">Execute</button>
+				    	</div>
+				    </form>
+			    </div>
+			</div>
+		</div>
+		<div id="t_pathway2genes" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>Pathway </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Genes</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							For a given Pathways show any Genes associated with the Pathway.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('Pathway').has('name', <strong><var>pathwayName</var></strong> ).<br>
+				    		&nbsp;out('CONTAINS').in('CODING').order().by('description')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="pathwayName-t_pathway2genes" class="col-sm-offset-2 col-sm-2 control-label">pathwayName</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="pathwayName-t_pathway2genes" placeholder="pathwayName" value="Gap-filling DNA repair synthesis and ligation in TC-NER">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_pathway2genes">Execute</button>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+		<div id="t_pathways2protein" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>Pathways </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Protein</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							For a given pathway, show all proteins.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('Pathway').has('name', <strong><var>pathwayName</var></strong> ).<br>
+				    		&nbsp;out('CONTAINS').order().by('name')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="pathwayName-t_pathway2proteins" class="col-sm-offset-2 col-sm-2 control-label">pathwayName</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="pathwayName-t_pathway2proteins" placeholder="pathwayName" value="Gap-filling DNA repair synthesis and ligation in TC-NER">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_pathway2proteins">Execute</button>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+		<div id="t_gene2go" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>Gene </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> GO Term</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							Search for GO annotations for a particular gene.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('Gene').has('nomenclatureAuthoritySymbol', <strong><var>symbol</var></strong> ).<br>
+				    		&nbsp;in('ANNOTATES').order().by('name')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="symbol-t_gene2go" class="col-sm-offset-2 col-sm-2 control-label">symbol</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="symbol-t_gene2go" placeholder="symbol" value="PPARG">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_gene2go">Execute</button>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+		<div id="t_gene2pathway" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>Gene </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Pathway</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							For a given Gene, show any associated Pathway.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('Gene').has('nomenclatureAuthoritySymbol', <strong><var>symbol</var></strong> ).<br>
+				    		&nbsp;out('CODING').in('CONTAINS').order().by('name')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="symbol-t_gene2pathway" class="col-sm-offset-2 col-sm-2 control-label">symbol</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="symbol-t_gene2pathway" placeholder="symbol" value="PPARG">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_gene2pathway">Execute</button>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+		<div id="t_protein2go" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>Protein </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> GO Term</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							For a given Protein, returns the associated Gene Ontology (GO) terms.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('Protein').has('name', <strong><var>proteinName</var></strong> ).<br>
+				    		&nbsp;in('ANNOTATES').order().by('name')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="name-t_protein2go" class="col-sm-offset-2 col-sm-2 control-label">symbol</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="name-t_protein2go" placeholder="name" value="PPARG_HUMAN">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_protein2go">Execute</button>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+		<div id="t_mirna2cancer" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>miRNA </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Cancer</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							For a given miRNA, returns the associated cancers from miRCancer.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('MiRNA').has('name', <strong><var>mirnaName</var></strong> ).<br>
+				    		&nbsp;in('CANCER2MIRNA').dedup().order().by('name')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="name-t_mirna2cancer" class="col-sm-offset-2 col-sm-2 control-label">name</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="name-t_mirna2cancer" placeholder="name" value="hsa-mir-17">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_mirna2cancer">Execute</button>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+		<div id="t_mirna2genes" class="collapse col-lg-9">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center"><span>miRNA mature </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Genes</span></h5>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+					    <small>
+							For a given miRNA mature, returns the genes through all the validated (miRTarBase) interactions.<br>&nbsp;
+					    </small>
+			    	</p>
+				    <p class="bg-warning text-center">
+				    	<samp><small>
+				    		<br>
+				    		&nbsp;g.V().hasLabel('MiRNAmature').has('product', <strong><var>mirnaName</var></strong> ).<br>
+				    		&nbsp;in('INTERACTING_MIRNA').has('database','miRTarBase').out('INTERACTING_GENE').<br>
+				    		&nbsp;dedup().order().by('nomenclatureAuthoritySymbol')
+				    		<br>&nbsp;
+				    	</small></samp>
+				    </p>
+				    <form class="form-horizontal">
+				    	<br>
+				    	<div class="form-group">
+				    		<label for="name-t_mirna2genes" class="col-sm-offset-2 col-sm-2 control-label">name</label>
+				    		<div class="col-sm-6">
+				    			<input type="text" class="form-control" id="name-t_mirna2genes" placeholder="name" value="hsa-miR-148a-3p">
+				    		</div>
+				    	</div>
+				    	<div class="text-center col-sm-offset-1 col-sm-10">
+				    		<button type="button" class="btn btn-primary btn-tool" id="execute-t_mirna2genes">Execute</button>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	</div>
+
+	<div role="tabpanel" class="tab-pane" id="scenarios">
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-primary text-center">
+				<p>
+					<h3>Scenarios</h3>
+					Scenarios are predefined complex queries, proposed as examples of how BioGraph and Gremlin can help us in the analysis of specifics non-trivial problems.<br>
+					After setting parameters, the ready-to-run query is sent to the <i>Gremlin Workbench</i> page for execution.
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-3">
+			<div class="panel panel-primary">
+				<div class="list-group">
+					<a class="list-group-item" data-toggle="collapse" href="#scenario1" aria-expanded="false" aria-controls="scenario1">
+						miRNA functional analysis in cancer
+					</a>
+					<a class="list-group-item" data-toggle="collapse" href="#scenario2" aria-expanded="false" aria-controls="scenario2">
+						miRNA-SNP functional analysis in cancer
+					</a>
+					<a class="list-group-item" data-toggle="collapse" href="#scenario3" aria-expanded="false" aria-controls="scenario3">
+						Cancer involved miRNAs by pathway
+					</a>
+					<a class="list-group-item" data-toggle="collapse" href="#scenario4" aria-expanded="false" aria-controls="scenario4">
+						Common pathways between genes
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="collapse col-lg-9" id="scenario1">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center">miRNA functional analysis in cancer</h5>
+				</div>
+				<div class="panel-body">
+			    <p class="text-justify">
+				    <small>
+					    The query investigates the functional role of miRNAs in cancer pathology.<br>
+					    Wild-type differentially expressed (DE) miRNAs in a specific cancer disease are investigated as regulative elements of gene targets through interaction analysis.
+					    At this point an energy filter is applied according to the free energy score of the binding site predicted by miRanda.
+					    This allows to highlight only miRNA-target interactions that are strongly bound.<br>
+						The targets evidenced are then analyzed through GO enrichment, to see the functional annotations that link these molecules to the selected cancer disease.<br>&nbsp;
+				    </small>
+			    </p>
+			    <p class="bg-warning text-center">
+			    	<samp><small>
+			    		<br>
+			    		&nbsp;g.V().hasLabel('Cancer').has('name', <strong><var>cancerName</var></strong> ).<br>
+			    		&nbsp;out('CANCER2MIRNA').dedup().out('PRECURSOR_OF').in('INTERACTING_MIRNA').<br>
+			    		&nbsp;has('database','miRanda').has('energy',lt( <strong><var>energy</var></strong> )).<br>
+			    		&nbsp;out('INTERACTING_GENE').dedup().in('ANNOTATES').dedup()
+			    		<br>&nbsp;
+			    	</small></samp>
+			    </p>
+			    <form class="form-horizontal">
+			    	<div class="form-group">
+			    		<label for="cancerName-sc1" class="col-sm-offset-2 col-sm-2 control-label">cancerName</label>
+			    		<div class="col-sm-6">
+			    			<input type="text" class="form-control" id="cancerName-sc1" placeholder="cancerName" value="colorectal cancer">
+			    		</div>
+			    	</div>
+			    	<div class="form-group">
+			    		<label for="energy-sc1" class="col-sm-offset-2 col-sm-2 control-label">energy</label>
+			    		<div class="col-sm-2">
+			    			<input type="number" class="form-control" id="energy-sc1" value="-34">
+			    		</div>
+			    	</div>
+			    	<div class="text-center col-sm-offset-1 col-sm-10">
+			    		<button type="button" class="btn btn-primary btn-tool" id="execute-sc1">Execute</button>
+			    	</div>
+			    </form>
+			    </div>
+		    </div>
+		</div>
+		<div class="collapse col-lg-9" id="scenario2">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center">miRNA-SNP functional analysis in cancer</h5>
+				</div>
+				<div class="panel-body">
+			    <p class="text-justify">
+				    <small>
+				    	The query allows to evidence the functional significance of miRNA single nucleotide polymorphisms (SNPs) in cancer pathology.<br>
+				    	Starting from a specific cancer type, miRNA SNPs linked to the cancer disease are selected and used in miRNA-target interactions DB (a free energy score is applied).<br>
+				    	The results list used to evidence GO association lists related to DE miRNA SNPs and cancer disease.<br>&nbsp;
+				    </small>
+			    </p>
+			    <p class="bg-warning text-center">
+			    	<samp><small>
+			    		<br>
+			    		&nbsp;g.V().hasLabel('Cancer').has('name', <strong><var>cancerName</var></strong> ).<br>
+			    		&nbsp;out('CANCER2MIRNA').dedup().out('PRECURSOR_OF').out('HAS_SNP').<br>
+			    		&nbsp;in('INTERACTING_SNP').has('snpEnergy',lt( <strong><var>snpEnergy</var></strong> )).<br>
+			    		&nbsp;out('INTERACTING_GENE').dedup().in('ANNOTATES').dedup()
+			    		<br>&nbsp;
+			    	</small></samp>
+			    </p>
+			    <br>
+			    <form class="form-horizontal">
+			    	<div class="form-group">
+			    		<label for="cancerName-sc2" class="col-sm-offset-2 col-sm-2 control-label">cancerName</label>
+			    		<div class="col-sm-6">
+			    			<input type="text" class="form-control" id="cancerName-sc2" placeholder="cancerName" value="colorectal cancer">
+			    		</div>
+			    	</div>
+			    	<div class="form-group">
+			    		<label for="snpEnergy-sc2" class="col-sm-offset-2 col-sm-2 control-label">snpEnergy</label>
+			    		<div class="col-sm-2">
+			    			<input type="number" class="form-control" id="snpEnergy-sc2" value="-34">
+			    		</div>
+			    	</div>
+			    	<div class="text-center col-sm-offset-1 col-sm-10">
+			    		<button type="button" class="btn btn-primary btn-tool" id="execute-sc2">Execute</button>
+			    	</div>
+			    </form>
+			    </div>
+		    </div>
+		</div>
+		<div class="collapse col-lg-9" id="scenario3">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center">Cancer involved miRNAs by pathway</h5>
+				</div>
+				<div class="panel-body">
+			    <p class="text-justify">
+				    <small>
+				    	Starting from a specific pathway, finds the up-regulated miRNAs involved in a specific cancer scenario.<br>&nbsp;
+				    </small>
+			    </p>
+			    <p class="bg-warning text-center">
+			    	<samp><small>
+			    		<br>
+			    		&nbsp;g.V().hasLabel('Pathway').has('name', <strong><var>pathwayName</var></strong> ).out('CONTAINS').in('CODING').<br>
+			    		&nbsp;in('INTERACTING_GENE').has('database', 'miRanda').has('energy',lt( <strong><var>energy</var></strong> )).<br>
+			    		&nbsp;out('INTERACTING_MIRNA').dedup().in('PRECURSOR_OF').inE('CANCER2MIRNA').has('profile', <strong><var>profile</var></strong> ).outV().dedup()
+			    		<br>&nbsp;
+			    	</small></samp>
+			    </p>
+			    <br>
+			    <form class="form-horizontal">
+			    	<div class="form-group">
+			    		<label for="pathwayName-sc3" class="col-sm-offset-2 col-sm-2 control-label">pathwayName</label>
+			    		<div class="col-sm-6">
+			    			<input type="text" class="form-control" id="pathwayName-sc3" placeholder="pathwayName" value="Cell Cycle">
+			    		</div>
+			    	</div>
+			    	<div class="form-group">
+			    		<label for="energy-sc3" class="col-sm-offset-2 col-sm-2 control-label">energy</label>
+			    		<div class="col-sm-2">
+			    			<input type="number" class="form-control" id="energy-sc3" value="-30">
+			    		</div>
+			    	</div>
+			    	<div class="form-group">
+			    		<label for="profile-sc3" class="col-sm-offset-2 col-sm-2 control-label">profile</label>
+			    		<label class="radio-inline">&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="profile-sc3" id="profile-sc3-radio1" value="up" checked>Up</label>
+			    		<label class="radio-inline"><input type="radio" name="profile-sc3" id="profile-sc3-radio2" value="down">Down</label>
+			    	</div>
+			    	<div class="text-center col-sm-offset-1 col-sm-10">
+			    		<button type="button" class="btn btn-primary btn-tool" id="execute-sc3">Execute</button>
+			    	</div>
+			    </form>
+			    </div>
+			</div>
+		</div>
+		<div class="collapse col-lg-9" id="scenario4">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+				    <h5 class="text-center">Common pathways between two genes</h5>
+				</div>
+				<div class="panel-body">
+			    <p class="text-justify">
+				    <small>
+				    	Starting from two given genes, finds all pathways. If common pathways are found, the user will focus them instantly.<br>&nbsp;
+				    </small>
+			    </p>
+			    <p class="bg-warning text-center">
+			    	<samp><small>
+			    		<br>
+			    		&nbsp;g.V().hasLabel('Gene').choose(values('nomenclatureAuthoritySymbol')).<br>
+			    		&nbsp;option( <strong><var>gene1</var></strong> ,__.as('a')).option( <strong><var>gene1</var></strong> ,__.as('b')).<br>
+			    		&nbsp;out('CODING').in('CONTAINS')
+			    		<br>&nbsp;
+			    	</small></samp>
+			    </p>
+			    <br>
+			    <form class="form-horizontal">
+			    	<div class="form-group">
+			    		<label for="gene1-sc4" class="col-sm-offset-3 col-sm-2 control-label">gene1</label>
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" id="geneSymbol1-sc4" placeholder="geneSymbol1" value="CUL1">
+			    		</div>
+			    	</div>
+			    	<div class="form-group">
+			    		<label for="gene2-sc4" class="col-sm-offset-3 col-sm-2 control-label">gene2</label>
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" id="geneSymbol2-sc4" placeholder="geneSymbol2" value="ATRIP">
+			    		</div>
+			    	</div>
+			    	<div class="text-center col-sm-offset-1 col-sm-10">
+			    		<button type="button" class="btn btn-primary btn-tool" id="execute-sc4">Execute</button>
+			    	</div>
+			    </form>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	</div>
+	
+	<div role="tabpanel" class="tab-pane" id="querydesk">
+	
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-primary">
+				<form class="form-horizontal" name="queryForm" id="queryForm" method="POST" action="">
+					<div id="queryBox" class="form-group">
+						<span style="float:left;">
+							<label for="query" class="control-label">Gremlin Query</label>
+						</span>
+						<div class="col-md-9">
+							<input type="text" class="form-control" placeholder="Gremlin query..." id="query" name="query">
+						</div>
+						<div class="col-md-2">
+							<span style="float:right;">
+								<button type="submit" class="btn btn-primary btn-tool">Execute</button>
+								<a role="button" id="resetAll" class="btn btn-success btn-tool">Clear</a>
+							</span>
+						</div>
+					</div>
+				</form>	
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-3"><div id="jstree" class='panel panel-primary'></div></div>
+		<div class="col-lg-9">
+			<div class="row">
+				<div class="col-lg-12">
+					<div id="cy"></div>
+					<div>
+						<span id="status">&nbsp;</span>
+						<span style="float:right;">
+							<a class="btn btn-primary btn-xs btn-tool" role="button" data-toggle="collapse" data-target="#analyze" aria-expanded="false" aria-controls="analyze">
+								Analysis
+							</a>
+							<a class="btn btn-primary btn-xs btn-tool" role="button" data-toggle="collapse" data-target="#exports" id="buttonExports" aria-expanded="false" aria-controls="exports">
+								Export
+							</a>
+							<a class="btn btn-primary btn-xs btn-tool" role="button" data-toggle="collapse" data-target="#legenda" aria-expanded="false" aria-controls="legenda">
+								Legenda
+							</a>
+						</span>
+					</div>
+					<div class="collapse" id="analyze">
+						<div class="well labels">
+							<div>
+								<button id='pvaluePathways' role="button" class="btn btn-success btn-xs btn-tool btn-pvalue" disabled="disabled" aria-pressed="false">Pathways pValue</button>
+								<button id='pvalueProteinsGo' role="button" class="btn btn-primary btn-xs btn-tool btn-pvalue" disabled="disabled" aria-pressed="false">Proteins-GO pValue</button>
+								<button id='pvalueGenesGo' role="button" class="btn btn-warning btn-xs btn-tool btn-pvalue" disabled="disabled" aria-pressed="false">Genes-GO pValue</button>
+							</div>
+							<div id="pvalueDetails"></div>
+						</div>
+					</div>
+					<div class="collapse" id="exports">
+						<div class="well labels">
+							<button id='exportTSV' role="button" class="btn btn-danger btn-xs btn-tool" disabled="disabled" aria-pressed="false">TSV</button>
+							<button id='exportGraphML' role="button" class="btn btn-success btn-xs btn-tool" disabled="disabled" aria-pressed="false">GraphML</button>
+							<button id='exportJSON' role="button" class="btn btn-primary btn-xs btn-tool" disabled="disabled" aria-pressed="false">JSON</button>
+							<button id='exportPNG' role="button" class="btn btn-warning btn-xs btn-tool" disabled="disabled" aria-pressed="false">PNG</button>
+						</div>
+					</div>
+					<div class="collapse" id="legenda">
+						<div class="well labels">
+							<span class="label label-legenda cancer">Cancer</span>
+							<span class="label label-legenda mirna">MiRNA</span>
+							<span class="label label-legenda mirnamature">MiRNA mature</span>
+							<span class="label label-legenda mirnasnp">MiRNA SNP</span>
+							<span class="label label-legenda interaction">Interaction</span>
+							<span class="label label-legenda gene">Gene</span>
+							<span class="label label-legenda protein">Protein</span>
+							<span class="label label-legenda pathway">Pathway</span>
+							<span class="label label-legenda go">GO</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<br>
+					<div id="title" class='text-center text-capitalize text-primary'>&nbsp;</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12"><div id="summary">&nbsp;</div></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12"><div id="details">&nbsp;</div></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	</div>
+
+	<div role="tabpanel" class="tab-pane" id="datasources">
+	</div>
+
+	<div role="tabpanel" class="tab-pane" id="contacts">
+	</div>
+
+</div>
+
+</div>
+
+<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-3.3.7.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.12.1.min.js"</script>
+<script type="text/javascript" src="/js/jqueryui-bootstrap-adapter.min.js"></script>
+<script type="text/javascript" src="/js/jquery.wikiblurb.js"></script>
+<script type="text/javascript" src="/js/cytoscape-2.7.14.min.js"></script>
+<!-- 
+<script type="text/javascript" src="/js/cytoscape-spread.js"></script>
+-->
+<script type="text/javascript" src="/js/cola.js"></script>
+<script type="text/javascript" src="/js/cytoscape-cola.js"></script>
+<script type="text/javascript" src="/js/cytoscape-graphml.js"></script>
+<script type="text/javascript" src="/js/jstree-3.3.3.min.js"></script>
+<script type="text/javascript" src="/js/jquery.bootcomplete.js"></script>
+<script type="text/javascript" src="/js/bootstrap-table-1.11.0.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-table-export.min.js"></script>
+<script type="text/javascript" src="/js/tableExport.js"></script>
+<script type="text/javascript" src="/js/download.js"></script>
+<script type="text/javascript" src="/js/isMobile.min.js"></script>
+<script type="text/javascript" src="/js/jquery.loading.block.js"></script>
+
+<script type="text/javascript">
+	var showedTemplate = '';
+	var templatesTree = [
+		{ "id": "t_functions", "parent": "#", "text": "Functions", "state": { opened: true } },
+		{ "id": "go2genes", "parent": "t_functions", "text": '<span>GO Term </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Genes</span>' },
+		{ "id": "pathways2protein", "parent": "t_functions", "text": '<span>Pathways </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Protein</span>' },
+		{ "id": "pathway2genes", "parent": "t_functions", "text": '<span>Pathway </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Genes</span>' },
+		{ "id": "t_genes", "parent": "#", "text": "Genes", "state": { opened: true } },
+		{ "id": "gene2go", "parent": "t_genes", "text": '<span>Gene </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> GO Term</span>' },
+		{ "id": "gene2pathway", "parent": "t_genes", "text": '<span>Gene </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Pathway</span>' },
+		{ "id": "t_proteins", "parent": "#", "text": "Proteins", "state": { opened: true } },	
+		{ "id": "protein2go", "parent": "t_proteins", "text": '<span>Protein </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> GO Term</span>' },
+		{ "id": "t_mirnas", "parent": "#", "text": "miRNAs", "state": { opened: true } },	
+		{ "id": "mirna2cancer", "parent": "t_mirnas", "text": '<span>miRNA </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Cancer</span>' },
+		{ "id": "mirna2genes", "parent": "t_mirnas", "text": '<span>miRNA mature </span><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><span> Genes</span>' }
+	];
+	
+	var classes = {
+		'Cancer' : { bg: '#d6e2f6', label: 'name' },
+		'Pathway': { bg: '#c0890c', label: 'name' },
+		'Protein': { bg: '#afc5e4', label: 'name' },
+		'Gene': { bg: '#bba7c6', label: 'nomenclatureAuthoritySymbol' },
+		'Interaction': { bg: '#bedfb1', label: 'database' },
+		'MiRNAmature': { bg: '#f09693', label: 'product' },
+		'MiRNA': { bg: '#f7cecc', label: 'name' },
+		'MiRNAsnp': { bg: '#eaca9e', label: 'SNPid' },
+		'Go': { bg: '#ffeebb', label: 'name' }
+	};
+	
+	var cy = cytoscape({
+	    container: document.getElementById('cy'),
+	    layout: { name: 'cola' }
+	});
+	
+	var foundProteins = new Set();
+	var foundGenes = new Set();
+	var foundAnnotations = new Set();
+	var foundPathways = new Set();
+	
+	var tooltipsHtml = new Array();
+	
+	var rawResults = new Array();
+	var pValues = new Array();
+	
+	var toolsURL = location.protocol + "//" + location.host + "/tools/";
+	var pvalueURL = location.protocol + "//" + location.host + "/pvalue/";
+	
+	$('#jstree').jstree();
+	
+	$('#templatestree').jstree({ 'core' : { 'data': templatesTree, 'multiple': false, 'themes': { 'icons': false } }, "plugins" : [ "wholerow" ] });
+	$('#templatestree').on("changed.jstree", function (e, data) {
+		showTemplate(data.selected[0]);
+	});
+
+	$('#resetAll').on('click', function () {
+		resetAll();
+	});
+
+	$(document).ready(function() {
+		$("#queryForm").submit(function(event) {
+			var formData = $("#queryForm").serializeArray();
+			var URL = toolsURL + "query"; //$("#queryForm").attr("action");
+			
+			$.loadingBlockShow();
+			
+			$.ajax({
+				url: URL, 
+				data: formData,
+				type: "POST",
+				dataType: "json",
+				success: function(g) {					
+					var tree = [], graph = [], parentId, addedNodes = [];
+
+					foundProteins = new Set();
+					foundGenes = new Set();
+					foundAnnotations = new Set();
+					foundPathways = new Set();
+
+					rawResults = new Array();
+					rawRowNum = -1;
+					
+					g.forEach(function (el){
+						var element = el;
+						
+						if("nodes"==el.group) {
+							if("undefined"!=typeof el.data.parent) {
+								parentId = el.data.parent;
+								delete element.data.parent;
+								
+								rawColNum++;
+							} else {
+								parentId = "#";
+								
+								rawRowNum++;
+								rawColNum = 0;
+								
+								rawResults[rawRowNum] = new Array();
+							}
+							
+							var nodeClass = el.data.label;
+
+							if("undefined"==typeof addedNodes[el.data.id]) {
+								var label = el.data[classes[nodeClass].label];
+                            	if (nodeClass == 'Interaction') {
+                            		label = ((label == 'miRTarBase') ? 'Validated' : 'Predicted') + ' Interaction';
+                            	}
+								var leaf = { "id": el.data.id, "parent": parentId, "text": label, "state": { opened: true } };
+								tree.push(leaf);
+								addedNodes[el.data.id] = true;
+							}
+							
+							var nodeValue, nodeName;
+
+							switch (nodeClass) {
+								case 'Protein':
+									foundProteins.add(el.data['name']);
+									nodeValue = el.data['name'];
+									nodeName = el.data['name'];
+									break;
+								case 'Gene':
+									foundGenes.add(el.data['nomenclatureAuthoritySymbol']);
+									nodeValue = el.data['nomenclatureAuthoritySymbol'];
+									nodeName = el.data['nomenclatureAuthoritySymbol'];
+									break;
+								case 'Go':
+									foundAnnotations.add(el.data['goId']);
+									nodeValue = el.data['goId'];
+									nodeName = el.data['name'];
+									break;
+								case 'Pathway':
+									foundPathways.add(el.data['pathwayId']);
+									nodeValue = el.data['pathwayId'];
+									nodeName = el.data['name'];
+									break;
+								case 'Interaction':
+									nodeValue = el.data['database'];
+									nodeName = el.data['database'];
+									break;
+								case 'Cancer':
+									nodeValue = el.data['name'];
+									nodeName = el.data['name'];
+									break;
+								case 'MiRNA':
+									nodeValue = el.data['name'];
+									nodeName = el.data['name'];
+									break;
+								case 'MiRNAmature':
+									nodeValue = el.data['product'];
+									nodeName = el.data['product'];
+									break;
+								case 'MiRNAsnp':
+									nodeValue = el.data['SNPid'];
+									nodeName = el.data['SNPid'];
+									break;
+							}
+							
+							rawResults[rawRowNum][rawColNum] = {
+									"label": nodeClass,
+									"name": nodeName,
+									"value": nodeValue
+							};
+						}
+				
+						graph.push(element);
+					});
+					
+					$.jstree.destroy();
+					cy.destroy();
+					
+					$('#templatestree').jstree({ 'core' : { 'data': templatesTree, 'multiple': true, 'themes': { 'icons': false } }, "plugins" : [ "wholerow" ] });
+					$('#templatestree').on("changed.jstree", function (e, data) {
+						showTemplate(data.selected[0]);
+					});
+
+					cy = cytoscape({
+				        container: document.getElementById('cy'),
+				        layout: { name: 'cola', fit: true, padding: 10, nodeRepulsion: 5000, edgeElasticity: 0.65, nestingFactor: 1, gravity: 0.1, animate: true, gravityRange: 4.8, ready: function(){ $('#jstree').jstree({ 'core' : { 'data': tree, 'multiple': false, 'themes': { 'icons': false } }, "plugins" : [ "wholerow", ] }); } },
+//				        layout: { name: 'cola', fit: true, padding: 10, nodeRepulsion: 5000, edgeElasticity: 0.65, nestingFactor: 1, gravity: 0.1, animate: true, gravityRange: 4.8, ready: function(){ $('#jstree').jstree({ 'core' : { 'data': tree, 'multiple': true, 'themes': { 'icons': false } }, "checkbox" : { "keep_selected_style" : false}, "plugins" : [ "wholerow", "checkbox" ] }); } },
+//				        layout: { name: 'spread', fit: true, minDist: 30, padding: 10, animate: true, maxFruchtermanReingoldIterations: 100, maxExpandIterations: 5, ready: function(){ $('#jstree').jstree({ 'core' : { 'data': tree, 'multiple': false, 'themes': { 'icons': false } }, "plugins" : [ "wholerow" ] }); } },
+				        style: [{
+			                        selector: 'node',
+			                        style: {
+			                        	
+		                                'label': function( ele ) { 
+		                                	var label = ele.data(classes[ele.data('label')].label);
+		                                	if (ele.data('label') == 'Interaction') {
+		                                		label = ((label == 'miRTarBase') ? 'Validated' : 'Predicted') + ' Interaction';
+		                                	}
+		                                	return label;
+		                                },
+		                                
+		                                width: 15,
+		                                height: 15,
+		                                'background-color': function( ele ) { return classes[ele.data('label')].bg; },
+		                                'font-size': 8
+			                        }
+				                },
+				                {
+				                	selector: 'edge',
+				                	style: {
+				                		'width': 1,
+				                		'curve-style': 'bezier',
+				                		'target-arrow-shape': 'triangle'
+		                                //'content': 'data(label)',
+		                                //'text-rotation': 'autorotate',
+		                                //'text-margin-y': -10
+				                	}
+				                }
+				        ],
+				        elements: graph
+					});
+					cy.on('tap', 'node', function(evt){
+						var node = evt.cyTarget;
+						showDetails(node.id());
+						document.getElementById('title').scrollIntoView();
+					});
+					cy.on('mouseover', 'node', function(evt){
+						var node = evt.cyTarget;
+						$('#status').html("Node ID: "+node.id()+", Entity Type: "+node.data("label")+", Name: "+node.style("label"));
+					});
+					cy.on('mouseout', 'node', function(evt){
+						$('#status').html("&nbsp;");
+					});
+					
+					graph = [], addedNodes = []; pValues = [];
+					
+					$('#jstree').on("changed.jstree", function (e, data) {
+						showDetails(data.selected[0]);
+						document.getElementById('title').scrollIntoView();
+					});
+					
+					$('#title').hide();
+
+					$('#title').html("&nbsp;");
+					$('#summary').html("&nbsp;");
+					$('#wiki').html("&nbsp;");
+					$('#details').html("&nbsp;");
+					$('#pvalueDetails').html("");
+					
+					//document.getElementById('buttonExports').style.visibility = (isMobile.any) ? "hidden" : "visible";
+					document.getElementById('buttonExports').disabled = isMobile.any;
+					document.getElementById('exportTSV').disabled = false;
+					document.getElementById('exportGraphML').disabled = false;
+					document.getElementById('exportJSON').disabled = false;
+					document.getElementById('exportPNG').disabled = false;					
+
+					//console.log("pathways: " + Array.from(foundPathways));
+					//console.log("annotations: " + Array.from(foundAnnotations));
+					//console.log("proteins: " + Array.from(foundProteins));
+					//console.log("genes: " + Array.from(foundGenes));
+
+					if (foundPathways.size > 0) {
+						document.getElementById('pvaluePathways').disabled = false;
+					} else {
+						document.getElementById('pvaluePathways').disabled = true;
+					}
+					
+					if (foundAnnotations.size > 0) {
+						if (foundProteins.size > 0) {
+							document.getElementById('pvalueProteinsGo').disabled = false;
+						} else {
+							document.getElementById('pvalueProteinsGo').disabled = true;
+						}
+						if (foundGenes.size > 0) {
+							document.getElementById('pvalueGenesGo').disabled = false;
+						} else {
+							document.getElementById('pvalueGenesGo').disabled = true;
+						}
+					} else {
+						document.getElementById('pvalueProteinsGo').disabled = true;
+						document.getElementById('pvalueGenesGo').disabled = true;						
+					}
+				},
+			    error: function (xhr, status) {
+		            alert("Sorry, there was a problem!");
+		        },
+		        complete: function (xhr, status) {
+		        	$.loadingBlockHide();
+		        }
+			});
+			event.preventDefault();
+		});
+	});
+
+    function resetAll(){
+		$.jstree.destroy();
+		cy.destroy();		
+		
+		$('#templatestree').jstree({ 'core' : { 'data': templatesTree, 'multiple': false, 'themes': { 'icons': false } }, "plugins" : [ "wholerow" ] });
+		$('#templatestree').on("changed.jstree", function (e, data) {
+			showTemplate(data.selected[0]);
+		});
+
+		$('#title').html("&nbsp;");
+		$('#summary').html("&nbsp;");
+		$('#wiki').html("&nbsp;");
+		$('#details').html("&nbsp;");
+		$('#pvalueDetails').html("");
+		document.getElementById('queryForm').reset();    	
+    };
+    
+    function showTemplate(tname) {
+		if (showedTemplate == tname) {
+			return;
+		}
+		$('#t_' + showedTemplate).collapse('hide');
+		$('#t_' + tname).collapse('show');
+		showedTemplate = tname;    	
+    };
+
+	function formatPathway(value, row, index) {
+	    return '<a href="#" onClick="showPathway(\'' + row["id"] + '\'); return false;">' + value + '</a>';
+	}
+	
+	function showPathway(id) {
+		var URL = toolsURL + "getPathway?id=";
+		showElement(URL, id);
+	} 
+	
+	function showGene(id) {
+		//var URL = "http://localhost:3000/getGene?id=";		
+		var URL = toolsURL + "getGene?id=";		
+		showElement(URL, id);
+	}
+	
+	function showElement(url, id) {
+		var URL = url + id;
+		
+		$.ajax({
+			url: URL,
+			type: "GET",
+			dataType: "json",
+			success: function(g) {
+				var node = cy.getElementById(g.data.id);
+				
+				if (node.length == 0) {
+					var vcy = cytoscape();
+					vcy.add( g );
+					node = vcy.getElementById(g.data.id);
+					vcy.destroy();
+				}
+				
+				showDetails(g.data.id, node);
+				document.getElementById("title").scrollIntoView(); 
+			},
+			error: function (xhr, status) {
+	            alert("Sorry, there was a problem!");
+	        },
+	        complete: function (xhr, status) {
+	        }
+		});
+	};
+
+	function setPValues(res) {
+		res.forEach(function (row){
+			pValues[ row.id ] = row.pValue.toExponential(4);
+		});
+		//console.log(pValues);
+	}
+	
+    function pvaluePathwaysGenesFormatter(index, row) {
+        var html = [];
+		var value = row["entitiesList"];
+		var genes = value.split(",");
+
+		html.push('<strong>Found entities:</strong> ');
+		
+		for (g in genes) {
+			html.push('<a href="#" onClick="showGene(\'' + genes[g] + '\'); return false;">' + genes[g] + '</a> ');
+		}
+
+		return html.join('');
+    }
+    
+	$('#pvaluePathways').on('click', function () {
+		var genesList = Array.from(foundGenes);
+		var URL = pvalueURL + "pathways/?genes=" + genesList
+		//var URL = "http://localhost:8185/?genes=" + genesList;
+		
+		$.loadingBlockShow();
+
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			success: function(res) {
+				setPValues(res);
+				
+				tooltipsHtml = new Array();
+				
+				html = "<br>" + buildBlock("Pathways pValues", '<table id="t_pvaluePathways" data-detail-view="true" data-detail-formatter="pvaluePathwaysGenesFormatter" data-toolbar="#toolbar" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="id" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+				$('#pvalueDetails').html(html);
+
+				$('#t_pvaluePathways').bootstrapTable({
+					"columns": [
+						{ "field": "name", "formatter": "formatPathway", "title": "Pathway", valign: 'middle', sortable: true },
+						{ "field": "entitiesFound", "title": "Found", valign: 'middle', align: 'right' },
+						{ "field": "entitiesTotal", "title": "Total", valign: 'middle', align: 'right' },
+						{ "field": "pValue", "formatter": "formatPValue", "title": "pValue", valign: 'middle', align: 'right', sortable: true }
+					],
+					"data": res
+				});
+			},
+			error: function (xhr, status) {
+	            alert("Sorry, there was a problem!");
+	        },
+	        complete: function (xhr, status) {
+	        	$.loadingBlockHide();
+	        	document.getElementById('t_pvaluePathways').scrollIntoView();
+	        }
+		});
+	});
+
+	function showGo(id) {
+		var URL = toolsURL + "getGo?id=";
+		showElement(URL, id);
+	} 
+
+	function formatGo(value, row, index) {
+	    return '<a href="#" onClick="showGo(\'' + row["id"] + '\'); return false;">' + value + '</a>';
+	}
+
+	function formatPValue(value, row, index) {
+		return value.toExponential(4);
+	}
+	
+    function pvalueGenesGoFormatter(index, row) {
+        var html = [];
+		var value = row["entitiesList"];
+		var genes = value.split(",");
+
+		html.push('<strong>Found entities:</strong> ');
+		
+		for (g in genes) {
+			html.push('<a href="#" onClick="showGene(\'' + genes[g] + '\'); return false;">' + genes[g] + '</a> ');
+		}
+
+        return html.join('');
+    }
+    
+	$('#pvalueGenesGo').on('click', function () {
+		var genesList = Array.from(foundGenes);
+		var URL = pvalueURL + "genesGo/?genes=" + genesList
+		//var URL = "http://localhost:8184/?genes=" + genesList;
+		
+		$.loadingBlockShow();
+
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			success: function(res) {
+				setPValues(res);
+				
+				html = "<br>" + buildBlock("Genes-GO pValues", '<table id="t_pvalueGenesGo" data-toolbar="#toolbar" data-detail-view="true" data-detail-formatter="pvalueGenesGoFormatter" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="id" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+				$('#pvalueDetails').html(html);
+
+				$('#t_pvalueGenesGo').bootstrapTable({
+					"columns": [
+						{ "field": "name", "formatter": "formatGo", "title": "Annotation", valign: 'middle', sortable: true },
+						{ "field": "namespace", "title": "Class", valign: 'middle', sortable: true },
+						{ "field": "entitiesFound", "title": "Entities Found", valign: 'middle', align: 'right' },
+						{ "field": "entitiesTotal", "title": "Entities Total", valign: 'middle', align: 'right' },
+						{ "field": "pValue", "formatter": "formatPValue", "title": "pValue", valign: 'middle', align: 'right', sortable: true }
+					],
+					"data": res
+				});
+			},
+			error: function (xhr, status) {
+	            alert("Sorry, there was a problem!");
+	        },
+	        complete: function (xhr, status) {
+	        	$.loadingBlockHide();
+	        	document.getElementById('t_pvalueGenesGo').scrollIntoView();
+	        }
+		});
+	});
+
+	function showProtein(id) {
+		//var URL = "http://localhost:3000/getProtein?id=";		
+		var URL = toolsURL + "getProtein?id=";
+		showElement(URL, id);
+	}
+	
+    function pvalueProteinsGoFormatter(index, row) {
+        var html = [];
+		var value = row["entitiesList"];
+		var proteins = value.split(",");
+
+		html.push('<strong>Found entities:</strong> ');
+		
+		for (p in proteins) {
+			html.push('<a href="#" onClick="showProtein(\'' + proteins[p] + '\'); return false;">' + proteins[p] + '</a> ');
+		}
+
+        return html.join('');
+    }
+    
+	$('#pvalueProteinsGo').on('click', function () {
+		var proteinsList = Array.from(foundProteins);
+		var URL = pvalueURL + "proteinsGo/?proteins=" + proteinsList;
+		//var URL = "http://localhost:8183/?proteins=" + proteinsList;
+		
+		$.loadingBlockShow();
+		
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			success: function(res) {
+				setPValues(res);
+				
+				html = "<br>" + buildBlock("Proteins-GO pValues", '<table id="t_pvalueProteinsGo" data-toolbar="#toolbar" data-detail-view="true" data-detail-formatter="pvalueProteinsGoFormatter" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="id" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+				$('#pvalueDetails').html(html);
+
+				$('#t_pvalueProteinsGo').bootstrapTable({
+					"columns": [
+						{ "field": "name", "formatter": "formatGo", "title": "Annotation", valign: 'middle', sortable: true },
+						{ "field": "namespace", "title": "Class", valign: 'middle', sortable: true },
+						{ "field": "entitiesFound", "title": "Entities Found", valign: 'middle', align: 'right' },
+						{ "field": "entitiesTotal", "title": "Entities Total", valign: 'middle', align: 'right' },
+						{ "field": "pValue", "formatter": "formatPValue", "title": "pValue", valign: 'middle', align: 'right', sortable: true }
+					],
+					"data": res
+				});
+			},
+			error: function (xhr, status) {
+	            alert("Sorry, there was a problem!");
+	        },
+	        complete: function (xhr, status) {
+	        	$.loadingBlockHide();
+	        	document.getElementById('t_pvalueProteinsGo').scrollIntoView();
+	        }
+		});
+	});
+
+	$('#goTerm-t_go2genes').bootcomplete({
+		//url: "http://localhost:3000/autocompleteGoTerms",
+		url: toolsURL + "autocompleteGoTerms",
+		minLength: 2,
+		idField: false
+	});
+	
+	$('#execute-t_go2genes').on('click', function () {
+		var query = 'g.V().hasLabel("Go").has("name","';
+		query += $('#goTerm-t_go2genes').val();
+		query += '").out("ANNOTATES").hasLabel("Gene").order().by("description")';
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#pathwayName-t_pathway2proteins').bootcomplete({
+		//url: "http://localhost:3000/autocompletePathwayNames",
+		url: toolsURL + "autocompletePathwayNames",
+		minLength: 2,
+		idField: false
+	});
+
+	$('#execute-t_pathway2proteins').on('click', function () {
+		var query = "g.V().hasLabel('Pathway').has('name','";
+		query += $('#pathwayName-t_pathway2proteins').val();
+		query += "').out('CONTAINS').order().by('name')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+	
+	$('#pathwayName-t_pathway2genes').bootcomplete({
+		//url: "http://localhost:3000/autocompletePathwayNames",
+		url: toolsURL + "autocompletePathwayNames",
+		minLength: 2,
+		idField: false
+	});
+
+	$('#execute-t_pathway2genes').on('click', function () {
+		var query = "g.V().hasLabel('Pathway').has('name','";
+		query += $('#pathwayName-t_pathway2genes').val();
+		query += "').out('CONTAINS').in('CODING').order().by('description')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#symbol-t_gene2go').bootcomplete({
+		//url: "http://localhost:3000/autocompleteGeneSymbols",
+		url: toolsURL + "autocompleteGeneSymbols",
+		minLength: 2,
+		idField: false
+	});
+
+	$('#execute-t_gene2go').on('click', function () {
+		var query = "g.V().hasLabel('Gene').has('nomenclatureAuthoritySymbol','";
+		query += $('#symbol-t_gene2go').val();
+		query += "').in('ANNOTATES').order().by('name')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#symbol-t_gene2pathway').bootcomplete({
+		//url: "http://localhost:3000/autocompleteGeneSymbols",
+		url: toolsURL + "autocompleteGeneSymbols",
+		minLength: 2,
+		idField: false
+	});
+
+	$('#execute-t_gene2pathway').on('click', function () {
+		var query = "g.V().hasLabel('Gene').has('nomenclatureAuthoritySymbol','";
+		query += $('#symbol-t_gene2pathway').val();
+		query += "').out('CODING').in('CONTAINS').order().by('name')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#name-t_protein2go').bootcomplete({
+		//url: "http://localhost:3000/autocompleteProteinNames",
+		url: toolsURL + "autocompleteProteinNames",
+		minLength: 2,
+		idField: false
+	});
+
+	$('#execute-t_protein2go').on('click', function () {
+		var query = "g.V().hasLabel('Protein').has('name','";
+		query += $('#name-t_protein2go').val();
+		query += "').in('ANNOTATES').order().by('name')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#execute-t_mirna2cancer').on('click', function () {
+		var query = "g.V().hasLabel('MiRNA').has('name','";
+		query += $('#name-t_mirna2cancer').val();
+		query += "').in('CANCER2MIRNA').dedup().order().by('name')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#execute-t_mirna2genes').on('click', function () {
+		var query = "g.V().hasLabel('MiRNAmature').has('product','";
+		query += $('#name-t_mirna2genes').val();
+		query += "').in('INTERACTING_MIRNA').has('database','miRTarBase').out('INTERACTING_GENE').dedup().order().by('nomenclatureAuthoritySymbol')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#cancerName-sc1').bootcomplete({
+		//url: "http://localhost:3000/autocompleteCancerNames",
+		url: toolsURL + "autocompleteCancerNames",
+		minLength: 2,
+		idField: false
+	});
+	
+	$('#execute-sc1').on('click', function () {
+		var query = "g.V().hasLabel('Cancer').has('name', '";
+		query += $('#cancerName-sc1').val();
+		query += "').out('CANCER2MIRNA').dedup().out('PRECURSOR_OF').in('INTERACTING_MIRNA').has('database','miRanda').has('energy',lt(";
+		query += $('#energy-sc1').val();
+		query += ")).out('INTERACTING_GENE').dedup().in('ANNOTATES').dedup()";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+
+	$('#cancerName-sc2').bootcomplete({
+		//url: "http://localhost:3000/autocompleteCancerNames",
+		url: toolsURL + "autocompleteCancerNames",
+		minLength: 2,
+		idField: false
+	});
+	
+	$('#execute-sc2').on('click', function () {
+		var query = "g.V().hasLabel('Cancer').has('name', '";
+		query += $('#cancerName-sc2').val();
+		query += "').out('CANCER2MIRNA').dedup().out('PRECURSOR_OF').out('HAS_SNP').in('INTERACTING_SNP').has('snpEnergy',lt(";
+		query += $('#snpEnergy-sc2').val();
+		query += ")).out('INTERACTING_GENE').dedup().in('ANNOTATES').dedup()";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+	
+	$('#pathwayName-sc3').bootcomplete({
+		//url: "http://localhost:3000/autocompletePathwayNames",
+		url: toolsURL + "autocompletePathwayNames",
+		minLength: 2,
+		idField: false
+	});
+	
+	$('#execute-sc3').on('click', function () {
+		var query = "g.V().hasLabel('Pathway').has('name', '";
+		query += $('#pathwayName-sc3').val();
+		query += "').out('CONTAINS').in('CODING').in('INTERACTING_GENE').has('database','miRanda').has('energy',lt(";
+		query += $('#energy-sc3').val();
+		query += ")).out('INTERACTING_MIRNA').dedup().in('PRECURSOR_OF').inE('CANCER2MIRNA').has('profile','";
+		query += $('input:radio[name=profile-sc3]:checked').val();
+		query += "').outV().dedup()";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+	
+	$('#execute-sc4').on('click', function () {
+		var query = "g.V().hasLabel('Gene').choose(values('nomenclatureAuthoritySymbol')).option('";
+		query += $('#geneSymbol1-sc4').val();
+		query += "', __.as('a')).option('";
+		query += $('#geneSymbol2-sc4').val();
+		query += "', __.as('b')).out('CODING').in('CONTAINS')";
+		
+		resetAll();
+		$('#query').val(query);
+		$('#myTabs a[href="#querydesk"]').tab('show');
+		$("#queryForm").submit();
+	});
+	
+	$('#scenario1').on('show.bs.collapse', function () {
+		$('#scenario2').collapse('hide');
+		$('#scenario3').collapse('hide');
+		$('#scenario4').collapse('hide');
+	});
+
+	$('#scenario2').on('show.bs.collapse', function () {
+		$('#scenario1').collapse('hide');
+		$('#scenario3').collapse('hide');
+		$('#scenario4').collapse('hide');
+	});
+
+	$('#scenario3').on('show.bs.collapse', function () {
+		$('#scenario1').collapse('hide');
+		$('#scenario2').collapse('hide');
+		$('#scenario4').collapse('hide');
+	});
+
+	$('#scenario4').on('show.bs.collapse', function () {
+		$('#scenario1').collapse('hide');
+		$('#scenario2').collapse('hide');
+		$('#scenario3').collapse('hide');
+	});
+
+	$('#analyze').on('show.bs.collapse', function () {
+		$('#exports').collapse('hide');
+		$('#legenda').collapse('hide');
+	});
+
+	$('#legenda').on('show.bs.collapse', function () {
+		$('#analyze').collapse('hide');
+		$('#exports').collapse('hide');
+	});
+
+	$('#exports').on('show.bs.collapse', function () {
+		$('#analyze').collapse('hide');
+		$('#legenda').collapse('hide');
+	});
+
+	$('#exportTSV').on('click', function () {
+		$('#exports').collapse('hide');
+		
+		var TSV = "";
+		var row = "";
+		//var arrData = JSON.stringify(cy.json().elements.nodes);
+		
+		//console.log(rawResults);
+		
+		var rowNums = rawResults.length;
+		if (rowNums > 0) {
+			
+			var firstRow = rawResults[0];
+			var colNums = firstRow.length;
+			var colCount = -1;
+			var pValueCol = -1;
+			var pValueEntityRef = -1;
+			
+			firstRow.forEach(function (node){
+				colCount++;
+
+				row += node.label + '\t';
+				
+				if (! $.isEmptyObject(pValues)) {
+					
+					if ((node.label == "Pathway") || (node.label == "Go")) {
+						pValueCol = colCount;
+						row += 'pValue\t';
+					}
+				}
+			});
+			
+			TSV += row + '\r\n';
+			
+			for (var i=0; i<rowNums; i++) {
+				row = "";
+				
+				for (var j=0; j<colNums; j++) {
+					row += rawResults[i][j].name + '\t';
+					if (j == pValueCol) {
+						row += pValues[ rawResults[i][j].value ] + '\t';
+					}
+				}
+				
+				TSV += row + '\r\n';
+			}
+			//console.log(TSV);
+			
+			
+			var uri = 'data:text/txt;charset=utf-8,' + escape(TSV);
+			var link = document.createElement("a");
+			
+			link.href = uri;
+			link.style = "visibility:hidden";
+			link.download = 'results.txt';
+			
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+
+	});
+
+	$('#exportPNG').on('click', function () {
+		$('#exports').collapse('hide');
+		
+		var png64 = cy.png('blob');
+		download(png64, 'results.png', 'image/png');
+	});
+
+	$('#exportJSON').on('click', function () {
+		$('#exports').collapse('hide');
+
+		var jsontext = JSON.stringify(cy.json());
+		var blob = new Blob([jsontext], {type: 'text/json'});
+		download(blob, 'results.json', 'text/json');
+	});
+	
+	$('#exportGraphML').on('click', function () {
+		$('#exports').collapse('hide');
+
+		var xmltext = cy.graphml();
+		var blob = new Blob([xmltext], {type: 'text/json'});
+		download(blob, 'results.graphml', 'text/plain');
+	});
+	
+	function mirbaseThumbPath(accession) {
+		var path = "";
+		var splitted = accession.substring(2).split("");
+		splitted.forEach(function (c){
+			path += c + '/';
+		});
+		return path.substring(0, path.length - 1);
+	}
+	
+	function formattedSequence(node) {
+		var coords = node.data("location").split('..');
+		return coords[0] + " - <span style='color: magenta'>" + node.data("sequence") + "</span> - " + coords[1];
+	}
+	
+	function getProteinAccessions(id) {
+		var accessions = "";
+		//var URL = "http://localhost:3000/getProteinAccessions?id=" + id;
+		var URL = toolsURL + "getProteinAccessions?id=" + id;
+		$.ajax({
+			url: URL,
+			type: "GET",
+			dataType: "json",
+			success: function(g) {
+				g.forEach(function (a){
+					accessions += a + " ";
+				});
+				$('#proteinAccessions').html(accessions);
+			},
+			error: function (xhr, status) {
+	            alert("Sorry, there was a problem!");
+	        },
+	        complete: function (xhr, status) {
+	        }
+		});
+	}
+	
+	function setTitle(t) {
+		$('#title').html(t);
+	}
+	
+	function setSummary(s) {
+		$('#summary').html(buildBlock("Summary", s));
+	}
+
+	function buildBlock(title, b) {
+		var ht = "<div class='panel panel-primary'>\n";
+		ht += "<div class='panel-heading'>" + title + "</div>\n";
+		ht += "<div class='panel-body'>\n" + b + "</div>\n";
+		ht += "</div>\n";
+		return ht;
+	}
+	
+	function showDetails(realId, vnode) {
+		$('#title').html("");
+		$('#summary').html("");
+		$('#details').html("");
+
+		$('#title').show();
+
+		var html = "";
+		var node = (typeof vnode === 'undefined') ? cy.getElementById(realId) : vnode;		
+		var label = node.data("label");
+		
+		switch(label) {
+			case 'Cancer':
+				setTitle(node.data("name"));
+				setSummary("<div id='wiki'></div>", false);
+
+				//var URL = "http://localhost:3000/getCancer?id=" + realId;
+				var URL = toolsURL + "getCancer?id=" + realId;
+				$.ajax({
+					url: URL,
+					type: "GET",
+					dataType: "json",
+					success: function(g) {
+						var wikipage = g.wikipage;
+
+						$('#wiki').wikiblurb({
+							page: wikipage,
+							section: 0,
+							removeLinks: false
+						});
+
+						html = buildBlock("Related miRNAs", '<table id="relatedMirnas" data-toolbar="#toolbar" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="id" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+						$('#details').html(html);
+
+						$('#relatedMirnas').bootstrapTable({
+							"columns": [
+								{ "field": "name", "title": "miRNA", valign: 'middle', sortable: true },
+								{ "field": "profile", "title": "Profile", valign: 'middle', align: 'center' }
+							],
+							"data": g.mirnas
+						});
+					},
+					error: function (xhr, status) {
+			            alert("Sorry, there was a problem!");
+			        },
+			        complete: function (xhr, status) {
+			        }
+				});
+				
+				break;
+			case 'Pathway':
+				setTitle(node.data("name"));
+
+				html = "<div class='table-responsive'><table class='table table-striped'>\n";
+				html += "<tr><th class='text-nowrap' width='20%'>Name</th><td>" + node.data("name") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap' width='20%'>Stable Identifier</th><td>" + node.data("pathwayId") + "</td></tr>\n";
+				if (node.data("summation").length > 0) {
+					var summation = node.data("summation").substring(1, node.data("summation").length - 1)
+					html += "<tr><th class='text-nowrap' width='20%'>Summation</th><td class='text-justify'>" + summation + "</td></tr>\n";
+				}
+				if (node.data("disease").length > 0) {
+					var disease = node.data("disease").substring(1, node.data("disease").length - 1)
+					html += "<tr><th class='text-nowrap' width='20%'>Disease</th><td class='text-justify'>" + disease + "</td></tr>\n";
+				}
+				html += "</table></div>\n";
+
+				setSummary(html);
+				
+				html = "<div id='proteins'></div>\n";
+				html += "<div id='mirnas'></div>\n";
+
+				$('#details').html(html);
+
+				//var URL = "http://localhost:3000/getPathwayProteins?id=" + realId;
+				var URL = toolsURL + "getPathwayProteins?id=" + realId;
+				$.ajax({
+					url: URL,
+					type: "GET",
+					dataType: "json",
+					success: function(g) {
+						html = buildBlock('Proteins','<table id="containedProteins" data-toolbar="#toolbar" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="id" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+						$('#proteins').html(html);
+						
+						$('#containedProteins').bootstrapTable({
+							"columns": [
+								{ "field": "name", "title": "Name", valign: 'middle', sortable: true },
+								{ "field": "fullName", "title": "Full Name", valign: 'middle', sortable: true }
+							],
+							"data": g
+						});
+					},
+					error: function (xhr, status) {
+			            alert("Sorry, there was a problem!");
+			        },
+			        complete: function (xhr, status) {
+			        }
+				});
+				
+				break;
+			case 'Protein':
+				setTitle(node.data("name"));
+
+				html = "<div class='table-responsive'><table class='table table-striped'>\n";
+				html += "<tr><th class='text-nowrap' width='20%'>Protein</th><td>" + node.data("fullName") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap' width='20%'>Gene</th><td>" + node.data("gene") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap' width='20%'>Accessions</th><td><div id='proteinAccessions'></div></td></tr>\n";
+				html += "</table></div>\n";
+
+				setSummary(html);
+
+				getProteinAccessions(realId);				
+				break;
+			case 'Gene':
+				setTitle(node.data("description"));
+
+				html = "<div class='table-responsive'><table class='table table-striped'>\n";
+				html += "<tr><th class='text-nowrap' width='20%'>Official Symbol</th><td>" + node.data("nomenclatureAuthoritySymbol") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Official Full Name</th><td>" + node.data("nomenclatureAuthorityFullName") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Gene Type</th><td>" + node.data("type") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Gene ID</th><td>" + node.data("geneId") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Map Location</th><td>" + node.data("mapLocation") + "</td></tr>\n";
+				html += "<tr><td colspan='2' class='text-center'><img src='https://www.ncbi.nlm.nih.gov/gutils/geneneighb.fcgi?geneid=" + node.data("geneId") + "'></td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Other Designations</th><td class='text-justify'>" + node.data("otherDesignations").replace(/\|/g, "; ") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>References</th><td><a href='https://www.ncbi.nlm.nih.gov/gene/" + node.data("geneId") + "' target='_new'>NCBI</a>&nbsp;</td></tr>\n";
+				html += "</table></div>\n";
+
+				setSummary(html);
+				break;
+			case 'Interaction':
+				var database = node.data("database");
+				switch (database) {
+					case 'miRTarBase':
+						setTitle('Validated miRNA-gene interaction from miRTarBase');
+						
+						html += "<div><div class='table-responsive'><table class='table table-striped'>\n";
+						html += "<tr><th class='text-nowrap' width='25%'>miRTarBase ID</th><td>" + node.data("miRTarBaseId") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>Experiments</th><td>" + node.data("experiments").replace(/\/\//g,'; ') + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>Support Type</th><td>" + node.data("supportType") + "</td></tr>\n";
+						html += "</table></div></div>";
+						
+						setSummary(html);
+						break;
+					case 'miRanda':
+						setTitle('miRNA-gene interaction predicted by miRanda');
+						
+						html += "<div><div class='table-responsive'><table class='table table-striped'>\n";
+						html += "<tr><th class='text-nowrap' width='25%'>Transcript ID</th><td>" + node.data("transcriptId") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>miRNA/Target Alignment</th><td><pre>" + node.data("mirAlignment") + "<br>"+ node.data("alignment") + "<br>" + node.data("geneAlignment") + "</pre></td></tr>\n";
+						html += "<tr><th class='text-nowrap'>miRNA start / end</th><td>" + node.data("mirStart") + " / " + node.data("mirEnd") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>Gene start / end</th><td>" + node.data("geneStart") + " / " + node.data("geneEnd") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>SVR Score</th><td>" + node.data("mirSvrScore") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>Conservation</th><td>" + node.data("conservation") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>Energy</th><td>" + node.data("energy") + "</td></tr>\n";
+						html += "</table></div></div>";
+						
+						setSummary(html);						
+						break;
+					case 'miRNASNP':
+						setTitle('Predicted miRNA-gene interaction from miRNASNP');
+						var basePair = node.data("basePair");
+						basePair = basePair.substring(4, basePair.length - 4);
+						basePair = basePair.split("\\n").join().replace(/,,/g,'<br>').replace(/,/g,'<br>').replace('X','<font color="red">|</font>');
+
+						html += "<div><div class='table-responsive'><table class='table table-striped'>\n";
+						html += "<tr><th class='text-nowrap' width='25%'>miRNA Average Expression</th><td>" + node.data("mirnaAve") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>Gene Average Expression</th><td>" + node.data("geneAve") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>Wild/SNP energy change (kcal/mol)</th><td>" + node.data("energy") + " / " + node.data("snpEnergy") + "</td></tr>\n";
+						html += "<tr><th class='text-nowrap'>SNP-miRNA/target duplexes</th><td><pre>" + basePair + "</pre></td></tr>\n";
+						html += "</table></div></div>";
+						
+						setSummary(html);						
+						break;
+				};
+				//$('#details').html(html);
+				break;
+			case 'MiRNAmature':
+				setTitle("Mature sequence "+ node.data("product"));
+
+				html += "<div><div class='table-responsive'><table class='table table-striped'>\n";
+				html += "<tr><th class='text-nowrap'>Accession</th><td>" + node.data("accession") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Sequence</th><td>" + formattedSequence(node) + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Evidence</th><td>" + node.data("evidence") + "; " + node.data("experiment") + "</td></tr>\n";
+				html += "</table></div></div>";
+				
+				setSummary(html);
+
+				html = "<div id='vtargets'></div>\n";
+				html += "<div id='ptargets'></div>\n";
+				$('#details').html(html);
+
+				//var URL = "http://localhost:3000/getMatureValidatedTargets?id=" + realId;
+				var URL = toolsURL + "getMatureValidatedTargets?id=" + realId;
+				$.ajax({
+					url: URL,
+					type: "GET",
+					dataType: "json",
+					success: function(g) {
+						if (g.length > 0) {
+							html = buildBlock('Targets validated by miRTarBase','<table id="validatedTargets" data-toolbar="#toolbar" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="gene" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+							$('#vtargets').html(html);
+							
+							$('#validatedTargets').bootstrapTable({
+								"columns": [
+									{ "field": "gene", "title": "Gene", sortable: true },
+									{ "field": "supportType", "title": "Support Type", valign: 'middle' },
+									{ "field": "experiments", "title": "Experiments", valign: 'middle' }
+								],
+								"data": g
+							});							
+						}
+					},
+					error: function (xhr, status) {
+			            alert("Sorry, there was a problem!");
+			        },
+			        complete: function (xhr, status) {
+			        }
+				});
+				
+				//URL = "http://localhost:3000/getMaturePredictedTargets?id=" + realId;
+				URL = toolsURL + "getMaturePredictedTargets?id=" + realId;
+				$.ajax({
+					url: URL,
+					type: "GET",
+					dataType: "json",
+					success: function(g) {
+						if (g.length > 0) {
+							var t = [];
+							g.forEach(function (n){
+								var interactions = n.interactions;
+								var tcell = "", scell = "";
+								interactions.forEach(function (i){
+									tcell += i.extTranscriptId + "<br>";
+									scell += i.mirSvrScore + "<br>";
+								});
+								t.push({
+									gene: n.gene,
+									extTranscriptId: tcell,
+									mirSvrScore: scell
+								});
+							});
+							html = buildBlock('Targets predicted by miRanda','<table id="predictedTargets" data-toolbar="#toolbar" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="gene" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+							$('#ptargets').html(html);
+							
+							$('#predictedTargets').bootstrapTable({
+								"columns": [
+									{ "field": "gene", "title": "Gene", sortable: true },
+									{ "field": "extTranscriptId", "title": "Transcription Id", valign: 'top' },
+									{ "field": "mirSvrScore", "title": "mirSVR score", align: 'right', valign: 'top' }
+								],
+								"data": t
+							});							
+						}
+					},
+					error: function (xhr, status) {
+			            alert("Sorry, there was a problem!");
+			        },
+			        complete: function (xhr, status) {
+			        }
+				});
+				
+				break;
+			case 'MiRNA':
+				setTitle("Stem-loop sequence "+ node.data("name"));
+
+				html += "<div class='table-responsive'><table class='table table-striped'>\n";
+				html += "<tr><th class='text-nowrap'>Accession</th><td>" + node.data("accession") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Description</th><td>" + node.data("description") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Sequence</th><td class='text-center'><a href='http://mirbase.org/cgi-bin/get_read.pl?acc=" + node.data("accession") + "' target='_new'><img src='http://mirbase.org/images/read_hist/" + mirbaseThumbPath(node.data("accession")) + ".thumb.png'></a></td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Comments</th><td class='text-justify'>" + node.data("comment") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>References</th><td><a href='http://mirbase.org/cgi-bin/mirna_entry.pl?acc=" + node.data("accession") + "' target='_new'>miRBase</a>&nbsp;<a href='http://www.mirbasetracker.org/index?search_type=history&search_molecule=precursor&search_string=" + node.data("accession") + "' target='_new'>miRBase-Tracker</a></td></tr>\n";
+				html += "</table></div>";
+				
+				setSummary(html);
+
+				//var URL = "http://localhost:3000/getMatures?id=" + realId;
+				var URL = toolsURL + "getMatures?id=" + realId;
+				$.ajax({
+					url: URL,
+					type: "GET",
+					dataType: "json",
+					success: function(g) {
+						html = buildBlock('Related matures','<table id="relatedMatures" data-toolbar="#toolbar" data-search="true" data-show-refresh="false" data-show-toggle="true" data-show-columns="false" data-show-export="true" data-show-pagination-switch="true" data-pagination="true" data-id-field="id" data-page-list="[10, 25, 50, 100, ALL]" data-show-footer="false"></table>');
+
+						$('#details').html(html);
+						
+						$('#relatedMatures').bootstrapTable({
+							"columns": [
+								{ "field": "accession", "title": "Accession", valign: 'middle', sortable: true },
+								{ "field": "product", "title": "Product", valign: 'middle', sortable: true }
+							],
+							"data": g
+						});
+					},
+					error: function (xhr, status) {
+			            alert("Sorry, there was a problem!");
+			        },
+			        complete: function (xhr, status) {
+			        }
+				});
+				
+				break;
+			case 'MiRNAsnp':
+				setTitle("SNP " + node.data("SNPid") + " in human pre-miRNA region");
+
+				html += "<div class='table-responsive'><table class='table table-striped'>\n";
+				html += "<tr><th class='text-nowrap' width='40%'>SNP ID</th><td>" + node.data("SNPid") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Pre-miRNA</th><td>" + node.data("miRNA") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Chromosome</th><td>" + node.data("chr") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Position (start/end)</th><td>" + node.data("miRstart") + " / " + node.data("miRend") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Targets (gain/loss) by SNP in miRNA seed</th><td>" + node.data("gainNum") + " / " + node.data("lostNum") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>References</th><td><a href='http://bioinfo.life.hust.edu.cn/miRNASNP2/quicksearch.php?terms=" + node.data("SNPid") + "' target='_new'>miRNASNP2</a>&nbsp;<a href='https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?searchType=adhoc_search&type=rs&rs=" + node.data("SNPid") + "' target='_new'>dbSNP</a></td></tr>\n";
+				html += "</table></div>";
+
+				setSummary(html, true);
+				break;
+			case 'Go':
+				setTitle(node.data("name"));
+
+				html += "<div class='table-responsive'><table class='table table-striped'>\n";
+				html += "<tr><th class='text-nowrap'>Accession</th><td>" + node.data("goId") + "</td><td rowspan='6' class='text-center'><img width='300px' src='http://amigo.geneontology.org/visualize?beta=0&inline=false&mode=quickgo&term=" + node.data("goId") + "'></td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Name</th><td>" + node.data("name") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Ontology</th><td>" + node.data("namespace") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>Definition</th><td class='text-justify'>" + node.data("definition") + "</td></tr>\n";
+				html += "<tr><th class='text-nowrap'>References</th><td><a href='http://amigo.geneontology.org/amigo/term/" + node.data("goId") + "' target='_new'>GO</a>&nbsp;<a href='http://www.ebi.ac.uk/QuickGO/GTerm?id=" + node.data("goId") + "' target='_new'>QuickGO</a></td></tr>\n";
+				html += "</table></div>";
+				
+				setSummary(html);
+				break;
+		}
+	}
+</script>
+
+</body>
+</html>
