@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>it.cnr.icar</groupId>
+  <artifactId>fisherPathways</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>fisher</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jettyVersion>9.4.2.v20170220</jettyVersion>
+  </properties>
+
+  <description>Fisher Extact Test as a microservice</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.eclipse.jetty</groupId>
+  		<artifactId>jetty-server</artifactId>
+  		<version>${jettyVersion}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-jdk14</artifactId>
+  		<version>1.7.24</version>
+  	</dependency>
+  	<dependency>
+	    <groupId>org.apache.tinkerpop</groupId>
+	    <artifactId>gremlin-driver</artifactId>
+	    <version>3.2.4</version>
+	</dependency>
+  	<dependency>
+  		<groupId>com.eclipsesource.minimal-json</groupId>
+  		<artifactId>minimal-json</artifactId>
+  		<version>0.9.4</version>
+  	</dependency>
+  </dependencies>
+</project>
