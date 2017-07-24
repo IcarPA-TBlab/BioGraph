@@ -1,0 +1,15 @@
+{
+  "name": "biograph-node",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "*",
+    "uuid": "^3.0.1",
+    "gremlin": "^2.3.2",
+    "express-form": "*",
+    "body-parser": "*"
+  }
+}
