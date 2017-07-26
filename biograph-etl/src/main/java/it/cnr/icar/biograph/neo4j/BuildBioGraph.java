@@ -90,14 +90,13 @@ public class BuildBioGraph {
 			System.exit(1);
 		}
 		
-		//deleteDirectory(dbPath);
+		deleteDirectory(dbPath);
 		
 		GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);
 		registerShutdownHook( graphDb );
 		
-		//InitSchema.init(graphDb);
+		InitSchema.init(graphDb);
 
-		/*
 		new NCBIGene().importData(graphDb, dataSourcesPath + sourcesMap.get("GENES"));
 		new GeneOntology().importData(graphDb, dataSourcesPath + sourcesMap.get("GO"));
 		new Gene2Go().importData(graphDb, dataSourcesPath + sourcesMap.get("GENE2GO"));
@@ -115,7 +114,6 @@ public class BuildBioGraph {
 		new ProteinNonCodingGene().importData(graphDb, dataSourcesPath + sourcesMap.get("NONCODING"));
 		new MiRNASNP().importData(graphDb, dataSourcesPath + sourcesMap.get("MIRNASNP"));
 		new SNPTargets().importData(graphDb, dataSourcesPath + sourcesMap.get("SNPTARGETS"));
-		*/
 		new MiRTarBase().importData(graphDb, dataSourcesPath + sourcesMap.get("MIRTARBASE"));
 		
 		graphDb.shutdown();
