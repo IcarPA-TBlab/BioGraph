@@ -790,6 +790,105 @@
 	</div>
 
 	<div role="tabpanel" class="tab-pane" id="datasources">
+	
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-primary text-center">
+				<p>
+					<h3>Data Sources</h3>
+					List of data sources used in current version of BioGraph.<br>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-primary">
+			<div class="table-responsive">
+	            <table class="table table-striped">
+	              <thead>
+	                <tr>
+	                  <th>Data Source</th>
+	                  <th>Version/Date</th>
+	                  <th>URL</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                <tr>
+						<td>NCBI Entrez Gene</td>
+						<td>09/05/2017</td>
+						<td>
+							<a href="ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz">ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz</a><br>
+							<a href="ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz">ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz</a>
+						</td>
+	                </tr>
+	                <tr>
+	                	<td>UniProt KnowledgeBase Swiss-Prot</td>
+	                	<td>2017_04</td>
+	                	<td>
+	                		<a href="ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz">ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz</a><br>
+	                		<a href="ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/by_organism/HUMAN_9606_idmapping_selected.tab.gz">ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/by_organism/HUMAN_9606_idmapping_selected.tab.gz</a>
+	                	</td>
+	                </tr>
+	                <tr>
+	                	<td>HGNC</td>
+	                	<td>10/05/2017</td>
+	                	<td>
+	                		<a href="ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt">ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt</a><br>
+	                		<a href="ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/locus_groups/protein-coding_gene.txt">ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/locus_groups/protein-coding_gene.txt</a><br>
+	                		<a href="ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/locus_groups/non-coding_RNA.txt">ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/locus_groups/non-coding_RNA.txt</a>
+	                	</td>
+	                </tr>
+	                <tr>
+	                	<td>Gene Ontology</td>
+	                	<td>09/05/2017</td>
+	                	<td><a href="http://archive.geneontology.org/latest-termdb/go_daily-termdb.obo-xml.gz">http://archive.geneontology.org/latest-termdb/go_daily-termdb.obo-xml.gz</a></td>
+	                </tr>
+	                <tr>
+	                	<td>Reactome</td>
+	                	<td>v59</td>
+	                	<td>
+	                		<a href="http://www.reactome.org/download/current/pathway2summation.txt">http://www.reactome.org/download/current/pathway2summation.txt</a><br>
+	                		<a href="http://www.reactome.org/download/current/gene_association.reactome">http://www.reactome.org/download/current/gene_association.reactome</a><br>
+	                		<a href="http://www.reactome.org/download/current/miRBase2Reactome_All_Levels.txt">http://www.reactome.org/download/current/miRBase2Reactome_All_Levels.txt</a>
+	                	</td>
+	                </tr>
+	                <tr>
+	                	<td>miRBase</td>
+	                	<td>Release 21</td>
+	                	<td><a href="ftp://mirbase.org/pub/mirbase/CURRENT/miRNA.dat.gz">ftp://mirbase.org/pub/mirbase/CURRENT/miRNA.dat.gz</a></td>
+	                </tr>
+	                <tr>
+	                	<td>miRCancer</td>
+	                	<td>December 2016</td>
+	                	<td><a href="http://mircancer.ecu.edu/downloads/miRCancerDecember2016.txt">http://mircancer.ecu.edu/downloads/miRCancerDecember2016.txt</a></td>
+	                </tr>
+	                <tr>
+	                	<td>microRNA.org</td>
+	                	<td>August 2010</td>
+	                	<td><a href="http://cbio.mskcc.org/microrna_data/human_predictions_S_C_aug2010.txt.gz">http://cbio.mskcc.org/microrna_data/human_predictions_S_C_aug2010.txt.gz</a></td>
+	                </tr>
+	                <tr>
+	                	<td>miRTarBase</td>
+	                	<td>6.1</td>
+	                	<td><a href="http://mirtarbase.mbc.nctu.edu.tw/cache/download/6.1/hsa_MTI.xlsx">http://mirtarbase.mbc.nctu.edu.tw/cache/download/6.1/hsa_MTI.xlsx</a></td>
+	                </tr>
+	                <tr>
+	                	<td>miRNASNP</td>
+	                	<td>2.0</td>
+	                	<td>
+	                		<a href="http://bioinfo.life.hust.edu.cn/miRNASNP2/download/snp_in_human_miRNA_seed_region.txt">http://bioinfo.life.hust.edu.cn/miRNASNP2/download/snp_in_human_miRNA_seed_region.txt</a><br>
+	                		<a href="http://bioinfo.life.hust.edu.cn/miRNASNP2/download/miRNA_targets_gain_by_SNPs_in_seed_regions.txt">http://bioinfo.life.hust.edu.cn/miRNASNP2/download/miRNA_targets_gain_by_SNPs_in_seed_regions.txt</a>
+	                	</td>
+	                </tr>
+	              </tbody>
+	            </table>
+			</div>
+		</div>
+	</div>
+</div>
+
 	</div>
 
 	<div role="tabpanel" class="tab-pane" id="contacts">
