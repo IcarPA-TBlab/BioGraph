@@ -216,57 +216,127 @@
 				                <tr>
 									<td>Gene</td>
 									<td>
+										geneId (String)<br>
+										locusTag (String)<br>
+										chromosome (String)<br>
+										mapLocation (String)<br>
+										description (String)<br>
+										type (String)<br>
+										nomenclatureAuthoritySymbol (String)<br>
+										nomenclatureAuthorityFullName (String)<br>
+										nomenclatureStatus (String)<br>
+										otherDesignations (String)
 									</td>
 				                </tr>
 				                <tr>
 									<td>GeneName</td>
 									<td>
+										symbol (String)
 									</td>
 				                </tr>
 				               </tbody>
 				                <tr>
 									<td>Go</td>
 									<td>
+										goId (String)<br>
+										name (String)<br>
+										namespace (String)<br>
+										definition (String)<br>
+										obsolete (String)<br>
+										comment (String)
 									</td>
 				                </tr>
 				                <tr>
 									<td>Protein</td>
 									<td>
+										name (String)<br>
+										fullName (String)<br>
+										alternativeName (String)<br>
+										gene (String)<br>
+										sequence (String)<br>
+										sequenceLenght (Int)<br>
+										sequenceMass (Int)
 									</td>
 				                </tr>
 				                <tr>
 									<td>ProteinName</td>
 									<td>
+										name (String)
 									</td>
 				                </tr>
 				                <tr>
 									<td>Pathway</td>
 									<td>
+										pathwayId (String)<br>
+										name (String)<br>
+										summation (String)
 									</td>
 				                </tr>
 				                <tr>
 									<td>Cancer</td>
 									<td>
+										name (String)
 									</td>
 				                </tr>
 				                <tr>
 									<td>MiRNA</td>
 									<td>
+										accession (String)<br>
+										name (String)<br>
+										description (String)<br>
+										comment (String)<br>
+										sequence (String)
 									</td>
 				                </tr>
 				                <tr>
 									<td>MiRNAmature</td>
 									<td>
+										...<br>
+										location (String)<br>
+										sequence (String)
 									</td>
 				                </tr>
 				                <tr>
 									<td>MiRNASNP</td>
 									<td>
+										SNPid (String)<br>
+										miRNA (String)<br>
+										chr (String)<br>
+										miRstart (Int)<br>
+										miRend (Int)<br>
+										lostNum (Int)<br>
+										gainNum (Int)
 									</td>
 				                </tr>
 				                <tr>
 									<td>Interaction</td>
 									<td>
+										transcriptId (String)<br>
+										extTranscriptId (String)<br>
+										mirAlignment (String)<br>
+										alignment (String)<br>
+										geneAlignment (String)<br>
+										mirStart (Int)<br>
+										mirEnd (Int)<br>
+										geneStart (Int)<br>
+										geneEnd (Int)<br>
+										genomeCoordinates (String)<br>
+										conservation (Double)<br>
+										alignScore (Int)<br>
+										seedCat (Int)<br>
+										energy (Double)<br>
+										mirSvrScore (String)<br>
+										<br>
+										mirTarBaseId (String)<br>
+										experiments (String)<br>
+										supportType (String)<br>
+										<br>
+										snpEnergy (Double)<br>
+										basePair (String)<br>
+										geneAve (Double)<br>
+										mirnaAve (Double)<br>
+										<br>
+										database (String)
 									</td>
 				                </tr>
 				            </table>
@@ -284,47 +354,71 @@
 				              <tbody>
 				                <tr>
 									<td>ANNOTATES</td>
-									<td></td>
+									<td>
+										evidence (String)<br>
+										qualifier (String)<br>
+										category (String)
+									</td>
 				                </tr>
 				                <tr>
 									<td>SYNONYM_OF</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>CODING</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>CONTAINS</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>REFERS_TO</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>CANCER2MIRNA</td>
-									<td></td>
+									<td>
+										profile (String)
+									</td>
 				                </tr>
 				                <tr>
 									<td>PRECURSOR_OF</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>HAS_SNP</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>INTERACTING_GENE</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>INTERACTING_MIRNA</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				                <tr>
 									<td>INTERACTING_SNP</td>
-									<td></td>
+									<td>
+										-
+									</td>
 				                </tr>
 				               </tbody>
 				            </table>
