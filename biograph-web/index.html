@@ -584,7 +584,7 @@
 				    <form class="form-horizontal">
 				    	<br>
 				    	<div class="form-group">
-				    		<label for="name-t_protein2go" class="col-sm-offset-2 col-sm-2 control-label">symbol</label>
+				    		<label for="name-t_protein2go" class="col-sm-offset-2 col-sm-2 control-label">proteinName</label>
 				    		<div class="col-sm-6">
 				    			<input type="text" class="form-control" id="name-t_protein2go" placeholder="name" value="PPARG_HUMAN">
 				    		</div>
@@ -618,7 +618,7 @@
 				    <form class="form-horizontal">
 				    	<br>
 				    	<div class="form-group">
-				    		<label for="name-t_mirna2cancer" class="col-sm-offset-2 col-sm-2 control-label">name</label>
+				    		<label for="name-t_mirna2cancer" class="col-sm-offset-2 col-sm-2 control-label">mirnaName</label>
 				    		<div class="col-sm-6">
 				    			<input type="text" class="form-control" id="name-t_mirna2cancer" placeholder="name" value="hsa-mir-17">
 				    		</div>
@@ -653,7 +653,7 @@
 				    <form class="form-horizontal">
 				    	<br>
 				    	<div class="form-group">
-				    		<label for="name-t_mirna2genes" class="col-sm-offset-2 col-sm-2 control-label">name</label>
+				    		<label for="name-t_mirna2genes" class="col-sm-offset-2 col-sm-2 control-label">mirnaName</label>
 				    		<div class="col-sm-6">
 				    			<input type="text" class="form-control" id="name-t_mirna2genes" placeholder="name" value="hsa-miR-148a-3p">
 				    		</div>
@@ -853,7 +853,7 @@
 			    	<samp><small>
 			    		<br>
 			    		&nbsp;g.V().hasLabel('Gene').choose(values('nomenclatureAuthoritySymbol')).<br>
-			    		&nbsp;option( <strong><var>gene1</var></strong> ,__.as('a')).option( <strong><var>gene1</var></strong> ,__.as('b')).<br>
+			    		&nbsp;option( <strong><var>gene1</var></strong> ,__.as('a')).option( <strong><var>gene2</var></strong> ,__.as('b')).<br>
 			    		&nbsp;out('CODING').in('CONTAINS')
 			    		<br>&nbsp;
 			    	</small></samp>
